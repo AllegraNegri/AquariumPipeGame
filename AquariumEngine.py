@@ -15,14 +15,22 @@ class Food():
         self.radius = 15
         self.width = 2 * self.radius
         self.height = self.width
-        self.speed = random.randint(1, 30)
+        self.speed = random.randint(1, 5)
 
     def move_down(self):
         ######################################################
         # Q7: Fill in this method
         ######################################################
-        speed = random.randint(1, 5)
-        self.y += speed
+        self.y += self.speed
+
+
+class PoisonousFood(Food):
+    def __init__(self, x_pos, y_pos):
+        super().__init__(x_pos, y_pos)
+        self.speed = self.speed * 2
+
+    def move_down(self):
+        self.y += self.speed
 
 
 class Pipe():
@@ -112,7 +120,7 @@ class Aquarium():
 
         self.score = 0
         self.game_running = True
-        self.prob_food=0.05
+        self.prob_food = 0.05
         ## game constants
         self.width = width
         self.height = height
@@ -146,7 +154,7 @@ class Aquarium():
             # self.pipe.add_food()
 
             addingfood = random.randint(1, 100)
-            if addingfood/100 < self.prob_food:
+            if addingfood / 100 < self.prob_food:
                 self.pipe.add_food()
 
             # Process all events
