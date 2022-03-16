@@ -16,6 +16,7 @@ CREAM = (242, 235, 211)
 BACKGROUND_COLOUR = (19, 189, 172)
 WHITE = (255, 255, 255)
 PIPE_COLOUR = (131, 214, 206)
+POISON_COLOUR= (224, 13, 13)
 
 
 def setup_display(game_width, game_height):
@@ -33,15 +34,22 @@ def draw_board(
     score,
     game_running,
     player,
-    pipe,
+    pipes,
 ):
     (display, gamefont) = game_display
     display.fill(BACKGROUND_COLOUR)
 
     # draw all food
-    for food_item in pipe.food_pieces:
-        pygame.draw.circle(display, BORDER_COLOUR, (pipe.x + (pipe.radius / 2), food_item.y),
-                           food_item.radius, 0)
+    for pipe in pipes:
+        for food_item in pipe.food_pieces:
+            if isinstance(food_item, AquariumEngine.PoisonousFood):
+                pygame.draw.circle(display, POISON_COLOUR, (pipe.x + (pipe.radius / 2), food_item.y),
+                                    food_item.radius, 0)
+
+            else:
+                pygame.draw.circle(display, BORDER_COLOUR, (pipe.x + (pipe.radius / 2), food_item.y),
+                                    food_item.radius, 0)
+
 
     # draw over food overlapping border
     pygame.draw.rect(display, BACKGROUND_COLOUR,
@@ -65,7 +73,8 @@ def draw_board(
     display.blit(score_surf, (score_x, score_y))
 
     # display pipe
-    pygame.draw.rect(display, PIPE_COLOUR, (pipe.x, pipe.y, pipe.radius, 330))
+    for pipe in pipes:
+        pygame.draw.rect(display, PIPE_COLOUR, (pipe.x, pipe.y, pipe.radius, 330))
 
     # display player
     display.blit(player.image, (player.x, player.y))
